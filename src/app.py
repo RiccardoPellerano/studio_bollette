@@ -9,6 +9,7 @@ import pandas as pd
 import os
 import datetime as dt
 
+
 bollette = ['BUPA_2022','Cagliari_3piano', 'Cagliari_5piano', 'Villasimius_Serre_Morus']
 
 #creiamo un applicazione web con stile bootstrap
@@ -74,7 +75,7 @@ def mappa(bollette):
         '25/12/2022', 
         '26/12/2022'
     ]
-    consumi = pd.read_excel('Bollette.xlsx', sheet_name=bollette)
+    consumi = pd.read_excel('Bollette.xlsx',engine='openpyxl', sheet_name=bollette)
     df_bolletta_2022 = calendario('Ore_luce_2022.xlsx', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     mesi1=[0,1,2,3,4,5,6,7,8,9,10,11]
