@@ -51,13 +51,12 @@ app.layout = html.Div([
 ],style={'background-color':'#000000',
          'background-size': '50%',
          'height':'105h'
-         })
+        })
 
 @app.callback(
     Output('Copertuta', 'figure'),
     Output('Consumi', 'figure'),
     Input("bollette", "value"),
-
 )
 def mappa(bollette):
     giorni_festivi2022 = [
@@ -169,8 +168,8 @@ def mappa(bollette):
         hovertemplate='<b>%{label} </b> <br> kWh: %{value}</b> <br> Copertura: %{color:.2f}%',
         name='',
         textfont_color='#000000',
-        ))
-    \
+    ))
+
     fig1.update_layout(
         margin = dict(t=0, l=0, r=0, b=20, pad=0),
         height = 500,
@@ -181,8 +180,9 @@ def mappa(bollette):
         paper_bgcolor  = '#000000',
     )
 
-    fig1.update_xaxes(color='#ffffff',
-                      linecolor='#ffffff',
+    fig1.update_xaxes(
+        color='#ffffff',
+        linecolor='#ffffff',
     )
     
     fig2 = go.Figure(
@@ -191,6 +191,7 @@ def mappa(bollette):
         go.Bar(name='F2', x=mesi, y=consumi['F2'], hovertemplate= "consumo: %{y}"),
         go.Bar(name='F3', x=mesi, y=consumi['F3'], hovertemplate= "consumo: %{y}")
         ])
+    
     fig2.update_layout(
         xaxis_title="Mesi",
         yaxis_title="Consumi",
@@ -212,10 +213,12 @@ def mappa(bollette):
             )
         ),        
     )
+    
     fig2.update_xaxes(color='#ffffff',
                       mirror=True,
                       gridcolor='#000000'
     )
+    
     fig2.update_yaxes(color='#ffffff', 
                       gridcolor='#ffffff'
     )
