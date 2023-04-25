@@ -16,9 +16,9 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name':
 
 server = app.server
 
-
+os.chdir('.')
 #print(os.getcwd()) # dice in quale directory ci troviamo
-#os.chdir('data')
+os.chdir('data')
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([
