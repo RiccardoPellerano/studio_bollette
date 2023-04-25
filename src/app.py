@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import os
 import datetime as dt
+import pathlib
 
 bollette = ['BUPA_2022','Cagliari_3piano', 'Cagliari_5piano', 'Villasimius_Serre_Morus']
 
@@ -19,6 +20,19 @@ server = app.server
 #os.chdir('..')
 #print(os.getcwd()) # dice in quale directory ci troviamo
 #os.chdir('src')
+
+
+def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
+   '''
+   Load data from /data directory as a pandas DataFrame
+   using relative paths. Relative paths are necessary for
+   data loading to work in Render.
+   '''
+   PATH = pathlib.Path(__file__).parent
+   DATA_PATH = PATH.joinpath("data").resolve()
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet)
+
+
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([
@@ -73,7 +87,8 @@ def mappa(bollette):
         '25/12/2022', 
         '26/12/2022'
     ]
-    consumi = pd.read_excel('Bollette.xlsx', sheet_name=bollette)
+    consumi = get_pandas_data("Bollette.xlsx", sheet_name=bollette)
+   
     df_bolletta_2022 = calendario('Ore_luce_2022.xlsx', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     mesi1=[0,1,2,3,4,5,6,7,8,9,10,11]
