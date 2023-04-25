@@ -18,7 +18,7 @@ server = app.server
 
 #os.chdir('..')
 #print(os.getcwd()) # dice in quale directory ci troviamo
-#os.chdir('data')
+os.chdir('src')
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([
