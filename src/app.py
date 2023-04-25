@@ -16,7 +16,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name':
 
 server = app.server
 
-os.chdir('.')
+os.chdir('..')
 #print(os.getcwd()) # dice in quale directory ci troviamo
 os.chdir('data')
 
