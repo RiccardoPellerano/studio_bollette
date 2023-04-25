@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import os
 import datetime as dt
+import openpyxl
 
 
 bollette = ['BUPA_2022','Cagliari_3piano', 'Cagliari_5piano', 'Villasimius_Serre_Morus']
