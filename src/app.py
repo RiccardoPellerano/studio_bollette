@@ -9,8 +9,6 @@ import pandas as pd
 import os
 import datetime as dt
 
-
-
 bollette = ['BUPA_2022','Cagliari_3piano', 'Cagliari_5piano', 'Villasimius_Serre_Morus']
 
 #creiamo un applicazione web con stile bootstrap
