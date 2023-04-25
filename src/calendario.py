@@ -10,7 +10,7 @@ def get_pandas_data(xlsx_filename: str,xlsx_sheet: str) -> pd.DataFrame:
    '''
    PATH = pathlib.Path(__file__).parent
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),xlsx_sheet)
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name = xlsx_sheet)
 
 def h(giorno, ora):
     return dt.datetime.combine(giorno,ora)
