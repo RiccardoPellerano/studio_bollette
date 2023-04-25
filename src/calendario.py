@@ -10,24 +10,24 @@ def get_pandas_data(xlsx_filename: str,xlsx_sheet: str) -> pd.DataFrame:
    '''
    PATH = pathlib.Path(__file__).parent
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet)
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),xlsx_sheet)
 
 def h(giorno, ora):
     return dt.datetime.combine(giorno,ora)
 
 def calendario(file, giorni_festivi):
-    df_01 = get_pandas_data(file, sheet_name='Gennaio')
-    df_02 = get_pandas_data(file, sheet_name='Febbraio')
-    df_03 = get_pandas_data(file, sheet_name='Marzo')
-    df_04 = get_pandas_data(file, sheet_name='Aprile')
-    df_05 = get_pandas_data(file, sheet_name='Maggio')
-    df_06 = get_pandas_data(file, sheet_name='Giugno')
-    df_07 = get_pandas_data(file, sheet_name='Luglio')
-    df_08 = get_pandas_data(file, sheet_name='Agosto')
-    df_09 = get_pandas_data(file, sheet_name='Settembre')
-    df_10 = get_pandas_data(file, sheet_name='Ottobre')
-    df_11 = get_pandas_data(file, sheet_name='Novembre')
-    df_12 = get_pandas_data(file, sheet_name='Dicembre')
+    df_01 = get_pandas_data(file, 'Gennaio')
+    df_02 = get_pandas_data(file, 'Febbraio')
+    df_03 = get_pandas_data(file, 'Marzo')
+    df_04 = get_pandas_data(file, 'Aprile')
+    df_05 = get_pandas_data(file, 'Maggio')
+    df_06 = get_pandas_data(file, 'Giugno')
+    df_07 = get_pandas_data(file, 'Luglio')
+    df_08 = get_pandas_data(file, 'Agosto')
+    df_09 = get_pandas_data(file, 'Settembre')
+    df_10 = get_pandas_data(file, 'Ottobre')
+    df_11 = get_pandas_data(file, 'Novembre')
+    df_12 = get_pandas_data(file, 'Dicembre')
     mesi = [df_01, df_02, df_03, df_04, df_05, df_06, df_07, df_08, df_09, df_10, df_11, df_12]
     
     df_bolletta = pd.concat(mesi, ignore_index=True)

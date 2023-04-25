@@ -87,7 +87,7 @@ def mappa(bollette):
         '25/12/2022', 
         '26/12/2022'
     ]
-    consumi = get_pandas_data("Bollette.xlsx", sheet_name=bollette)
+    consumi = get_pandas_data("Bollette.xlsx", bollette)
    
     df_bolletta_2022 = calendario('Ore_luce_2022.xlsx', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
