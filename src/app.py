@@ -17,7 +17,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name':
 
 server = app.server
 
-os.chdir('..')
+#os.chdir('..')
 #print(os.getcwd()) # dice in quale directory ci troviamo
 #os.chdir('src')
 
@@ -30,7 +30,7 @@ def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
    '''
    PATH = pathlib.Path('src').parent
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet, engine = 'openpyxl')
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet)
 
 
 
