@@ -2,14 +2,18 @@ import pandas as pd
 import datetime as dt
 import pathlib
 
-def get_pandas_data(xlsx_filename: str,xlsx_sheet: str) -> pd.DataFrame:
+def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
    '''
    Load data from /data directory as a pandas DataFrame
    using relative paths. Relative paths are necessary for
-   data loading to work in Heroku.
+   data loading to work in Render.
    '''
-   PATH = pathlib.Path('src').parent
+   os.chdir('..')
+   PATH = pathlib.Path('/opt/render/project/src')
    DATA_PATH = PATH.joinpath("data").resolve()
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet)
+
+
    return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name = xlsx_sheet)
 
 def h(giorno, ora):
