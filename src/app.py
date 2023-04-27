@@ -27,7 +27,7 @@ def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
    os.chdir('..')
    PATH = pathlib.Path('/opt/render/project/src')
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet)
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet, engine='openpyxl')
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([

@@ -2,6 +2,7 @@ import pandas as pd
 import datetime as dt
 import pathlib
 import os
+
 def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
    '''
    Load data from /data directory as a pandas DataFrame
@@ -11,7 +12,7 @@ def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
    os.chdir('..')
    PATH = pathlib.Path('/opt/render/project/src')
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet)
+   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet, engine='openpyxl')
 
 
 
