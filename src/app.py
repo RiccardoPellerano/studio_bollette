@@ -45,7 +45,7 @@ app.layout = html.Div([
         dbc.Row([ 
             dbc.Col([  
                 html.H4("Seleziona l'abitazione",style={'color':'white','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
-                dcc.Dropdown(options = [{'label': i, 'value': i} for i in bollette],value='BUPA_2022', id = 'bollette', style ={'width' :'400px','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
+                dcc.Dropdown(options = [{'label': i, 'value': i} for i in bollette],value='BUPA_2022.csv', id = 'bollette', style ={'width' :'400px','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
             ])
         ]),
         dbc.Row([ 
@@ -86,7 +86,7 @@ def mappa(bollette):
     ]
     consumi = get_pandas_data(bollette)
    
-    df_bolletta_2022 = calendario('Ore_luce_2022.csv')
+    df_bolletta_2022 = calendario('Ore_luce_2022.csv', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     mesi1=[0,1,2,3,4,5,6,7,8,9,10,11]
 
