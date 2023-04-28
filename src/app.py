@@ -10,7 +10,7 @@ import os
 import datetime as dt
 import pathlib
 
-bollette = ['BUPA_2022','Cagliari_3piano', 'Cagliari_5piano', 'Villasimius_Serre_Morus']
+bollette = ['BUPA-2022.csv','BUPA-2021.csv','BUPA-2020.csv','Serre-Morus.csv']
 
 #creiamo un applicazione web con stile bootstrap
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name': 'viewport','content': 'width=device-width, initial-scale=1.0'}])
@@ -18,7 +18,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name':
 server = app.server
 
 
-bollette = ['BUPA-2022.csv','BUPA-2021.csv','BUPA-2020.csv','Serre-Morus.csv']
+
 
 def get_pandas_data(csv_filename: str) -> pd.DataFrame:
    '''
