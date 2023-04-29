@@ -10,7 +10,7 @@ import os
 import datetime as dt
 import pathlib
 
-bollette = ['BUPA-2022.csv','BUPA-2021.csv','BUPA-2020.csv','Serre-Morus.csv']
+bollette = ['BUPA_2022.csv','BUPA_2021.csv','BUPA_2020.csv','Serre_Morus.csv']
 
 #creiamo un applicazione web con stile bootstrap
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name': 'viewport','content': 'width=device-width, initial-scale=1.0'}])
@@ -42,7 +42,7 @@ app.layout = html.Div([
         dbc.Row([ 
             dbc.Col([  
                 html.H4("Seleziona l'abitazione",style={'color':'white','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
-                dcc.Dropdown(options = [{'label': i, 'value': i} for i in bollette],value='BUPA_2022.csv', id = 'bollette', style ={'width' :'400px','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
+                dcc.Dropdown(options = [{'label': i, 'value': i} for i in bollette], value='BUPA_2022.csv', id = 'bollette', style ={'width' :'400px','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
             ])
         ]),
         dbc.Row([ 
