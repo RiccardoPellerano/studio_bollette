@@ -17,16 +17,16 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name':
 
 server = app.server
 
-def get_pandas_data(csv_filename: str) -> pd.DataFrame:
-   '''
-   Load data from /data directory as a pandas DataFrame
-   using relative paths. Relative paths are necessary for
-   data loading to work in Heroku.
-   '''
-   os.chdir('..')
-   PATH = pathlib.Path('/opt/render/project')
-   DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
+#def get_pandas_data(csv_filename: str) -> pd.DataFrame:
+ #  '''
+  # Load data from /data directory as a pandas DataFrame
+   #using relative paths. Relative paths are necessary for
+   #data loading to work in Heroku.
+   #'''
+   #os.chdir('..')
+   #PATH = pathlib.Path('/opt/render/project')
+   #DATA_PATH = PATH.joinpath("data").resolve()
+   #return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([
@@ -81,8 +81,8 @@ def mappa(bollette):
         '25/12/2022', 
         '26/12/2022'
     ]
-    consumi = get_pandas_data(bollette)
-   
+    #consumi = get_pandas_data(bollette)
+    consumi = pd.read_csv(bollette, sep =';')
     df_bolletta_2022 = calendario('Ore_luce_2022.csv', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     mesi1=[0,1,2,3,4,5,6,7,8,9,10,11]
