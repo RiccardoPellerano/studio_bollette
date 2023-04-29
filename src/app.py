@@ -82,7 +82,7 @@ def mappa(bollette):
         '26/12/2022'
     ]
     #consumi = get_pandas_data(bollette)
-    consumi = pd.read_csv(bollette, sep =';')
+    consumi = pd.read_csv(bollette, sep =';', engine='openpyxl')
     df_bolletta_2022 = calendario('Ore_luce_2022.csv', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     mesi1=[0,1,2,3,4,5,6,7,8,9,10,11]
