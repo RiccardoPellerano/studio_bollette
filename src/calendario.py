@@ -21,7 +21,7 @@ def h(giorno, ora):
 def calendario(file, giorni_festivi):
    
     #df_bolletta =get_pandas_data(file)
-    df_bolletta = pd.read_csv(file, sep=';', engine='python')
+    df_bolletta = pd.read_csv(file, sep=';', engine='python-fwf')
     df_bolletta['Giorno'] = [i[0].upper() for i in df_bolletta['Data']]
     df_bolletta['Data'] = [dt.datetime.strptime(i[2:], '%d/%m/%Y').date() for i in df_bolletta['Data']]
     

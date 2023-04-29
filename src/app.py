@@ -27,7 +27,7 @@ def get_pandas_data(csv_filename: str) -> pd.DataFrame:
    os.chdir('..')
    PATH = pathlib.Path('/opt/render/project/src')
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
+   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';',engine='python-fwf')
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([
