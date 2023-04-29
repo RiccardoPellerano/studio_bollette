@@ -3,39 +3,25 @@ import datetime as dt
 import pathlib
 import os
 
-def get_pandas_data(xlsx_filename: str, xlsx_sheet: str ) -> pd.DataFrame:
+def get_pandas_data(csv_filename: str) -> pd.DataFrame:
    '''
    Load data from /data directory as a pandas DataFrame
    using relative paths. Relative paths are necessary for
-   data loading to work in Render.
+   data loading to work in Heroku.
    '''
    os.chdir('..')
    PATH = pathlib.Path('/opt/render/project/src')
    DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_excel(DATA_PATH.joinpath(xlsx_filename),sheet_name=xlsx_sheet, engine='openpyxl')
-
-
+   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
 
 
 def h(giorno, ora):
     return dt.datetime.combine(giorno,ora)
 
 def calendario(file, giorni_festivi):
-    df_01 = get_pandas_data(file, 'Gennaio')
-    df_02 = get_pandas_data(file, 'Febbraio')
-    df_03 = get_pandas_data(file, 'Marzo')
-    df_04 = get_pandas_data(file, 'Aprile')
-    df_05 = get_pandas_data(file, 'Maggio')
-    df_06 = get_pandas_data(file, 'Giugno')
-    df_07 = get_pandas_data(file, 'Luglio')
-    df_08 = get_pandas_data(file, 'Agosto')
-    df_09 = get_pandas_data(file, 'Settembre')
-    df_10 = get_pandas_data(file, 'Ottobre')
-    df_11 = get_pandas_data(file, 'Novembre')
-    df_12 = get_pandas_data(file, 'Dicembre')
-    mesi = [df_01, df_02, df_03, df_04, df_05, df_06, df_07, df_08, df_09, df_10, df_11, df_12]
-    
-    df_bolletta = pd.concat(mesi, ignore_index=True)
+   
+    #df_bolletta =get_pandas_data(file)
+    df_bolletta = pd.read_csv(file, sep=';', engine='python')
     df_bolletta['Giorno'] = [i[0].upper() for i in df_bolletta['Data']]
     df_bolletta['Data'] = [dt.datetime.strptime(i[2:], '%d/%m/%Y').date() for i in df_bolletta['Data']]
     
