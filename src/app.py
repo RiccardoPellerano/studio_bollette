@@ -17,9 +17,6 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name':
 
 server = app.server
 
-
-
-
 def get_pandas_data(csv_filename: str) -> pd.DataFrame:
    '''
    Load data from /data directory as a pandas DataFrame
@@ -27,7 +24,7 @@ def get_pandas_data(csv_filename: str) -> pd.DataFrame:
    data loading to work in Heroku.
    '''
    os.chdir('..')
-   PATH = pathlib.Path('/opt/render/project/src')
+   PATH = pathlib.Path('/opt/render/project')
    DATA_PATH = PATH.joinpath("data").resolve()
    return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
 
