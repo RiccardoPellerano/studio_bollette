@@ -3,18 +3,6 @@ import datetime as dt
 import pathlib
 import os
 
-def get_pandas_data(csv_filename: str) -> pd.DataFrame:
-   '''
-   Load data from /data directory as a pandas DataFrame
-   using relative paths. Relative paths are necessary for
-   data loading to work in Heroku.
-   '''
-   os.chdir('..')
-   PATH = pathlib.Path('/opt/render/project/src')
-   DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
-
-
 def h(giorno, ora):
     return dt.datetime.combine(giorno,ora)
 
