@@ -10,13 +10,14 @@ import os
 import datetime as dt
 import pathlib
 
-bollette = ['BUPA_2022.csv','BUPA_2021.csv','BUPA_2020.csv','Serre_Morus.csv']
+
 
 #creiamo un applicazione web con stile bootstrap
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name': 'viewport','content': 'width=device-width, initial-scale=1.0'}])
 
 server = app.server
 
+bollette = ['BUPA_2022.csv','BUPA_2021.csv','BUPA_2020.csv','Serre_Morus.csv']
 
 def get_pandas_data(csv_filename: str) -> pd.DataFrame:
    '''
@@ -83,6 +84,7 @@ def mappa(bollette):
         '26/12/2022'
     ]
     consumi = get_pandas_data(bollette)
+    print(os.getcwd())
     #consumi = pd.read_csv(bollette, sep =';', engine='python')
     df_bolletta_2022 = calendario('Ore_luce_2022.csv', giorni_festivi2022)
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
