@@ -1,5 +1,4 @@
 #Dashboard R-plug
-from calendario import calendario
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
@@ -10,26 +9,137 @@ import os
 import datetime as dt
 import pathlib
 
+bollette = ['BUPA_2022.csv','Serre_Morus.csv']
+giorni_festivi2022 = [
+    '01/01/2022',
+    '06/01/2022',
+    '17/04/2022',
+    '18/04/2022',  
+    '25/04/2022',   
+    '01/05/2022',   
+    '02/06/2022',   
+    '15/08/2022', 
+    '01/11/2022', 
+    '08/12/2022',  
+    '25/12/2022', 
+    '26/12/2022'
+]
 
+def h(giorno, ora):
+    return dt.datetime.combine(giorno,ora)
+def get_pandas_data(csv_filename: str) -> pd.DataFrame:
+   #'''
+   #Load data from /data directory as a pandas DataFrame
+   #using relative paths. Relative paths are necessary for
+   #data loading to work in Heroku.
+   #'''
+   PATH = (pathlib.Path(__file__).parent).parent
+   DATA_PATH = PATH.joinpath("data").resolve()
+   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';')
+
+def calendario(file, giorni_festivi):
+
+    df_bolletta = get_pandas_data(file)
+    df_bolletta['Giorno'] = [i[0].upper() for i in df_bolletta['Data']]
+    df_bolletta['Alba'] = pd.to_datetime(df_bolletta['Alba'], format='%H:%M:%S').dt.time
+    df_bolletta['Tramonto'] = pd.to_datetime(df_bolletta['Tramonto'], format='%H:%M:%S').dt.time
+    df_bolletta['Ore_luce'] = pd.to_datetime(df_bolletta['Ore_luce'], format='%H:%M:%S').dt.time
+    df_bolletta['Data'] = [dt.datetime.strptime(i[2:], '%d/%m/%Y').date() for i in df_bolletta['Data']]
+    giorni_festivi = [dt.datetime.strptime(i, '%d/%m/%Y').date() for i in giorni_festivi2022]
+    
+    F1 = []
+    F2 = []
+    F3 = []
+
+    F1_START = '08:00'
+    F1_END = '19:00'
+
+    F2_START = '07:00'
+    F2_END = '08:00'
+
+    F1_start = dt.datetime.strptime(F1_START, '%H:%M').time()
+    F1_end = dt.datetime.strptime(F1_END, '%H:%M').time()
+
+    F2_start = dt.datetime.strptime(F2_START, '%H:%M').time()
+    F2_end =  dt.datetime.strptime(F2_END, '%H:%M').time()
+
+    for index, row in df_bolletta.iterrows():
+        if row['Giorno'] == 'D' or row['Data'] in giorni_festivi:
+            F3.append(dt.timedelta(hours = row['Ore_luce'].hour, minutes = row['Ore_luce'].minute))
+            F2.append(dt.timedelta(hours = 0, minutes = 0))
+            F1.append(dt.timedelta(hours = 0, minutes = 0))
+
+        elif row['Giorno'] == 'S' and row['Data'] not in giorni_festivi:
+            F1.append(dt.timedelta(hours = 0, minutes = 0))
+            if row['Alba'] < F2_start:
+                F3.append(h(row['Data'],F2_start) - h(row['Data'],row['Alba']))
+                F2.append(dt.timedelta(hours = row['Ore_luce'].hour, minutes = row['Ore_luce'].minute) - (h(row['Data'],F2_start) - h(row['Data'],row['Alba'])))
+            else:
+                F3.append(dt.timedelta(hours = 0, minutes = 0))
+                F2.append(dt.timedelta(hours = row['Ore_luce'].hour, minutes = row['Ore_luce'].minute))
+    
+        elif row['Giorno'] in ['L','M','G','V'] and row['Data'] not in giorni_festivi:
+            if row['Alba'] <= F2_start:
+                F3.append(h(row['Data'],F2_start) - h(row['Data'],row['Alba']))
+                if row['Tramonto'] < F1_end:
+                    F2.append(h(row['Data'],F2_end) - h(row['Data'],F2_start))
+                    F1.append(h(row['Data'],row['Tramonto']) - h(row['Data'],F1_start))
+                else:
+                    F2.append((h(row['Data'],F2_end) - h(row['Data'],F2_start)) + (h(row['Data'],row['Tramonto']) - h(row['Data'],F1_end)))
+                    F1.append(h(row['Data'],F1_end) - h(row['Data'],F1_start))
+            elif F2_start < row['Alba'] < F1_start:
+                F3.append(dt.timedelta(hours = 0, minutes = 0))
+                if row['Tramonto'] < F1_end:
+                    F2.append(h(row['Data'],F2_end)- h(row['Data'],row['Alba']))
+                    F1.append(h(row['Data'],row['Tramonto']) - h(row['Data'],F1_start))
+                else:
+                    F2.append((h(row['Data'],F2_end) - h(row['Data'],row['Alba'])) + (h(row['Data'],row['Tramonto']) - h(row['Data'],F1_end)))
+                    F1.append(h(row['Data'],F1_end) - h(row['Data'],F1_start))
+            elif row['Alba'] >= F1_start:
+                F3.append(dt.timedelta(hours = 0, minutes = 0))
+                if row['Tramonto'] < F1_end:
+                    F2.append(dt.timedelta(hours = 0, minutes = 0))
+                    F1.append(dt.timedelta(hours = row['Ore_luce'].hour, minutes = row['Ore_luce'].minute))
+                else:
+                    F2.append(h(row['Data'],row['Tramonto']) - h(row['Data'],F1_end))
+                    F1.append(h(row['Data'],F1_end) - h(row['Data'],row['Alba']))
+    
+    df_bolletta['F1'] = F1
+    df_bolletta['F2'] = F2
+    df_bolletta['F3'] = F3
+
+    F1_ore_totali = []
+    F2_ore_totali = []
+    F3_ore_totali = []
+    for index, row in df_bolletta.iterrows():
+        if row['Giorno'] == 'D' or row['Data'] in giorni_festivi:
+            F3_ore_totali.append(dt.timedelta(days=0, hours=24, minutes=0))
+            F2_ore_totali.append(dt.timedelta(days=0, hours=0, minutes=0))
+            F1_ore_totali.append(dt.timedelta(days=0, hours=0, minutes=0))
+
+        elif row['Giorno'] == 'S' and row['Data'] not in giorni_festivi:
+            F3_ore_totali.append(dt.timedelta(days=0, hours=8, minutes=0))
+            F2_ore_totali.append(dt.timedelta(days=0, hours=16, minutes=0))
+            F1_ore_totali.append(dt.timedelta(days=0, hours=0, minutes=0))
+        
+        elif row['Giorno'] in ['L','M','G','V'] and row['Data'] not in giorni_festivi:
+            F3_ore_totali.append(dt.timedelta(days=0, hours=8, minutes=0))
+            F2_ore_totali.append(dt.timedelta(days=0, hours=5, minutes=0))
+            F1_ore_totali.append(dt.timedelta(days=0, hours=11, minutes=0))
+
+    df_bolletta['F1_ore_totali'] = F1_ore_totali
+    df_bolletta['F2_ore_totali'] = F2_ore_totali
+    df_bolletta['F3_ore_totali'] = F3_ore_totali
+    
+    df_bolletta['Data'] = pd.to_datetime(df_bolletta['Data'])
+
+    return df_bolletta
 
 #creiamo un applicazione web con stile bootstrap
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{'name': 'viewport','content': 'width=device-width, initial-scale=1.0'}])
 
 server = app.server
 
-bollette = ['BUPA_2022.csv','BUPA_2021.csv','BUPA_2020.csv','Serre_Morus.csv']
-
-def get_pandas_data(csv_filename: str) -> pd.DataFrame:
-   '''
-   Load data from /data directory as a pandas DataFrame
-   using relative paths. Relative paths are necessary for
-   data loading to work in Heroku.
-   '''
-   #os.chdir('..')
-   print(__file__)
-   PATH = pathlib.Path('src')
-   DATA_PATH = PATH.joinpath("data").resolve()
-   return pd.read_csv(DATA_PATH.joinpath(csv_filename), sep =';',engine='python-fwf')
 
 #definiamo il layout dell'applicazione web
 app.layout = html.Div([
@@ -45,7 +155,7 @@ app.layout = html.Div([
         dbc.Row([ 
             dbc.Col([  
                 html.H4("Seleziona l'abitazione",style={'color':'white','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
-                dcc.Dropdown(options = [{'label': i, 'value': i} for i in bollette], value='BUPA_2022.csv', id = 'bollette', style ={'width' :'400px','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
+                dcc.Dropdown(options = [{'label': i, 'value': i} for i in bollette], value='Serre_Morus.csv', id = 'bollette', style ={'width' :'400px','font-family':'--tds-font-family--combined','font-weight': '--tds-heading--font-weight'}),
             ])
         ]),
         dbc.Row([ 
@@ -69,25 +179,13 @@ app.layout = html.Div([
     Output('Consumi', 'figure'),
     Input("bollette", "value"),
 )
+
 def mappa(bollette):
-    giorni_festivi2022 = [
-        '01/01/2022',
-        '06/01/2022',
-        '17/04/2022',
-        '18/04/2022',  
-        '25/04/2022',   
-        '01/05/2022',   
-        '02/06/2022',   
-        '15/08/2022', 
-        '01/11/2022', 
-        '08/12/2022',  
-        '25/12/2022', 
-        '26/12/2022'
-    ]
+
     consumi = get_pandas_data(bollette)
-    print(os.getcwd())
-    #consumi = pd.read_csv(bollette, sep =';', engine='python')
+
     df_bolletta_2022 = calendario('Ore_luce_2022.csv', giorni_festivi2022)
+    
     mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     mesi1=[0,1,2,3,4,5,6,7,8,9,10,11]
 
@@ -112,7 +210,7 @@ def mappa(bollette):
     'Maggio',   'F1_05','F2_05','F3_05',   'F1_05_C', 'F2_05_C', 'F3_05_C',
     'Giugno',   'F1_06','F2_06','F3_06',   'F1_06_C', 'F2_06_C', 'F3_06_C',
     'Luglio',   'F1_07','F2_07','F3_07',   'F1_07_C', 'F2_07_C', 'F3_07_C',
-    'Agosto',    'F1_08','F2_08','F3_08',  'F1_08_C', 'F2_08_C', 'F3_08_C',
+    'Agosto',   'F1_08','F2_08','F3_08',  'F1_08_C', 'F2_08_C', 'F3_08_C',
     'Settembre','F1_09','F2_09','F3_09',   'F1_09_C', 'F2_09_C', 'F3_09_C',
     'Ottobre',  'F1_10','F2_10','F3_10',   'F1_10_C', 'F2_10_C', 'F3_10_C',
     'Novembre', 'F1_11','F2_11','F3_11',   'F1_11_C', 'F2_11_C', 'F3_11_C',
